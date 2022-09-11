@@ -1,0 +1,190 @@
+
+
+/* https://coolors.co/eec4bb-d83d51-d53300-df7628-8ceb99-629e48-30482e-e4a807-fff373 */
+
+body{
+  margin: 0vw 3vw 1vw 3vw;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* ------------ table styling ----------------*/
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: 'Work Sans', sans-serif;
+    min-width: 200px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    /* overflow: hidden; */
+    overflow-x: scroll;
+}
+
+.styled-table thead tr{
+    background-color: #30482E;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #30482E;
+}
+
+/* ------------drop down styling ----------------*/
+
+/* Dropdown Container */
+.dropdown-container{
+  padding: .5vw .5vw .5vw .5vw;
+  position:fixed;
+  border-bottom: 1px solid #30482E;
+  background-color: white; 
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100vw;
+  display:flex;
+  flex-direction: row;
+}
+
+/* Dropdown Button */
+.dropbtn{
+  background-color: #629E48;
+  border: none;
+  border-radius: 20px;
+}
+
+.dropbtn:focus{
+  background-color: #629E48;
+  border: none;
+}
+
+
+.search-button-container {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  
+  /* The search field */
+  #myBreakdownInput,  #myFilterBreakdownInput, #myFilterablesInput{
+    box-sizing: border-box;
+    background-image: url('search-icon-1.png'); 
+    background-position: 8px 8px;
+    background-repeat: no-repeat;
+    background-size: 30px;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    /* border-bottom: 1px solid #ddd; */
+    min-width: 15vw;
+  }
+
+  #myFilterBreakdownInput{
+    background-image: url('filter-icon-0.png'); 
+  }
+
+
+  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1; /* Firefox */
+    font-family: 'Work Sans', sans-serif;
+  }
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: white;
+    font-family: 'Work Sans', sans-serif;
+  }
+  ::-ms-input-placeholder { /* Microsoft Edge */
+    color: white;
+    font-family: 'Work Sans', sans-serif;
+  }
+
+#exit-out-filterables{
+  position: relative;
+  right: 30px;
+}
+
+  /* The search field when it gets focus/clicked on */
+  #myBreakdownInput:focus, #myFilterBreakdownInput:focus, #myFilterablesInput:focus{outline: 3px solid #ddd;}
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 15vw;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 15vw;
+    border: 1px solid #ddd;
+    z-index: 1;
+    overflow-y: scroll;
+    max-height: 100vh;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    font-family: 'Work Sans', sans-serif;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  /* .dropdown-content a:hover {background-color: #f1f1f1} */
+  
+  /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+  .show {display:block;}
+
+  .show-flex {
+    display:flex;
+    flex-direction: row;
+  }
+
+  .hide {display:none;}
+
+  .selected {
+      color:rgb(92, 36, 64);
+      background-color: #EEC4BB;
+  }
+
+  /* Chart Style */
+
+.chart-section{
+  margin: 5vw;
+}
+
+.chart-subsection{
+  display: flex;
+  flex-direction: row;
+}
+
+
+  /* Charts */
+.chart{
+  padding: 2vw;
+}
