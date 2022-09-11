@@ -412,7 +412,78 @@ function destroyAllCharts(){
         myCharts[key].destroy()
     });
 }
-//create a chart
+
+const CHART_COLORS =   {
+    red: 'rgb(255, 99, 132)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    blue: 'rgb(54, 162, 235)',
+    purple: 'rgb(153, 102, 255)',
+    grey: 'rgb(201, 203, 207)'
+}
+
+//#EEC4BB Baby Pink - rgba(238,196,187)
+//#D83D51 Darker Pink - rgba(216,61,81)
+//#D53300 Dark Orange/Red - rgba(213,51,0)
+//#DF7628 Orange - rgba(223,118,40)
+//#E4A807 Golden Rod - rgb(228,168,7)
+//#EDC55A Light Yellow - rgba(237,197,90)
+//#8CEB99 Light Green - rgba(140,235,153)
+//#629E48 Medium Green - rgba(98,158,72)
+//#30482E Dark Green - rgba(48,72,46)
+
+//create a doughnut chart
+function generateDoughnutChart(dataForChart, breakdown, canvasID, excludeblankXValues, yValue1){
+    let xValues = []
+    let yValuesOne = []
+    for(let i=0; i<dataForChart.length; i++){
+        if (excludeblankXValues == "excludeblankXValues"){
+            if (dataForChart[i][breakdown].length > 0){
+                xValues.push(dataForChart[i][breakdown])
+                yValuesOne.push(dataForChart[i][yValue1])
+                }
+        }
+        else{
+            xValues.push(dataForChart[i][breakdown])
+            yValuesOne.push(dataForChart[i][yValue1])
+           }
+    }
+
+    if(typeof myCharts[canvasID] === 'undefined') {}
+    else if(myCharts[canvasID]!== null){myCharts[canvasID].destroy()}
+
+    myCharts[canvasID] = new Chart(canvasID, {
+        type: "doughnut",
+        data: {
+            labels: xValues,
+            datasets: 
+            [{
+                label: yValue1, 
+                backgroundColor: Object.values(CHART_COLORS),
+                borderWidth: 1, 
+                data: yValuesOne
+            },
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+            //   title: {
+            //     display: true,
+            //     text: 'Chart.js Doughnut Chart'
+            //   }
+            }
+        }
+    });
+
+}
+
+
+//create a bar chart
 function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, yValue1, yValue2, yValue3, yValue4, yValue5, yValue6){
     let xValues = []
     let yValuesOne = []
@@ -443,28 +514,35 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
             if(dataForChart[i][yValue3] !== undefined){yValuesSix.push(dataForChart[i][yValue6])}
         }
     }
-    let options = {
+
+    let optionsOneScale = {
         scales: {
             xAxis: {
                 grid: {color: 'white'},
-                // ticks: {
-                //     callback: function(label, index, labels) {
-                //         label = this.getLabelForValue(label)
-                //         if (/\s/.test(label)) {return label.split(" ");}
-                //         else if (/_/.test(label)) {return label.split("_");}
-                //         else{return label;}              
-                //     }
-                // }
             },
             y: {
                 type: 'linear',
                 position: 'left',
-                grid: {color: 'white', drawOnChartArea: false}
+                grid: {color: 'white'
+                },
+              }, 
+        }
+    }
+    let optionsTwoScales = {
+        scales: {
+            xAxis: {
+                grid: {color: 'white'},
+            },
+            y: {
+                type: 'linear',
+                position: 'left',
+                grid: {color: 'white'
+                },
               }, 
             y1: {
                 type: 'linear',
                 position: 'right',
-                grid: {color: 'white', drawOnChartArea: false}
+                grid: {color: 'white'}
             }
         }
     }
@@ -492,34 +570,9 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
                     borderWidth: 1, data: yValuesSix},
             ],
             },
-        options:  {
-            responsive: true,
-            interaction: {
-              mode: 'index',
-              intersect: false,
-            },
-            stacked: false,
-            plugins: {
-            //   title: {
-            //     display: true,
-            //     text: 'Chart.js Line Chart - Multi Axis'
-            //   }
-            }
-        }});
+        options: optionsTwoScales
+    });
     }
-
-
-//My Color Pallette
-//#EEC4BB Baby Pink - rgba(238,196,187)
-//#D83D51 Darker Pink - rgba(216,61,81)
-//#D53300 Dark Orange/Red - rgba(213,51,0)
-//#DF7628 Orange - rgba(223,118,40)
-//#E4A807 Golden Rod - rgb(228,168,7)
-//#EDC55A Light Yellow - rgba(237,197,90)
-//#8CEB99 Light Green - rgba(140,235,153)
-//#629E48 Medium Green - rgba(98,158,72)
-//#30482E Dark Green - rgba(48,72,46)
-
 
     else if(yValuesTwo.length==0){
         myCharts[canvasID] = new Chart(canvasID, {
@@ -530,7 +583,7 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
                 [{label: yValue1, yAxisID: 'y', backgroundColor: ['rgba(228,168,7, 0.2)'], borderColor: ['rgba(228,168,7)'],
                 borderWidth: 1, data: yValuesOne},]
             },
-            options: options
+            options: optionsOneScale
             });
     }
 
@@ -571,6 +624,19 @@ function generateAllCharts(object){
         generateChart(dataForChart, e, newCanvasID, "excludeblankXValues", "Total Conversions")
     })
     
+    //conversions by subdomain
+    dataForChart = createAnObjectWithStats(object, "Subdomain One")
+
+    let subdomainChartWrapper = document.getElementById("subdomain-charts-wrapper")
+    let newCanvas = document.createElement("canvas")
+    let newCanvasID = 'subdomainOne'
+    newCanvas.setAttribute("id",newCanvasID)
+    newCanvas.setAttribute("class","chart subdomain-One conversions")
+    newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
+    subdomainChartWrapper.appendChild(newCanvas)
+    myCharts[newCanvasID] = null
+
+    generateDoughnutChart(dataForChart, "Subdomain One",  "subdomainOne", "INcludeblankXValues", "Total Conversions")
 
     //campaign stats
     dataForChart = createAnObjectWithStats(object, "Last Impression Campaign Name")
