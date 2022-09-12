@@ -602,15 +602,11 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
 }
 
 
-function generateAllCharts(object){
 
-    
-    //conversions by utm source
-    let dataForChart = {}
-
+function utmCharts(object){
     let UTMTypeArray = findAllUTMTypes(object)
     UTMTypeArray.forEach(e => {
-        dataForChart = createAnObjectWithStats(object, e)
+        let dataForChart = createAnObjectWithStats(object, e)
 
         let UTMChartWrapper = document.getElementById("utm-charts-wrapper")
         let newCanvas = document.createElement("canvas")
@@ -620,34 +616,63 @@ function generateAllCharts(object){
         newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
         UTMChartWrapper.appendChild(newCanvas)
         myCharts[newCanvasID] = null
-        //if(myCharts[newCanvasID]!== null){myCharts[newCanvasID].destroy()}
+            //if(myCharts[newCanvasID]!== null){myCharts[newCanvasID].destroy()}
         generateChart(dataForChart, e, newCanvasID, "excludeblankXValues", "Total Conversions")
+        console.log("utm charts done (1)")
     })
+}
     
     //conversions by subdomain
-    dataForChart = createAnObjectWithStats(object, "Subdomain One")
-
+function subdomainOneChart(object){
+    let dataForChart = createAnObjectWithStats(object, "Subdomain One")
     let subdomainChartWrapper = document.getElementById("subdomain-charts-wrapper")
     let newCanvas = document.createElement("canvas")
     let newCanvasID = 'subdomainOne'
     newCanvas.setAttribute("id",newCanvasID)
     newCanvas.setAttribute("class","chart subdomain-One conversions")
-    newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
+    newCanvas.setAttribute("style","width:100%;max-width:50vw;max-height:50vw")
     subdomainChartWrapper.appendChild(newCanvas)
     myCharts[newCanvasID] = null
-
     generateDoughnutChart(dataForChart, "Subdomain One",  "subdomainOne", "INcludeblankXValues", "Total Conversions")
+    console.log("subdomain chart done (2)")
+}
+
+    //conversions by subdomain2
+    function subdomainTwoChart(object){
+        let dataForChart = createAnObjectWithStats(object, "Subdomain Two")
+        let subdomainChartWrapper = document.getElementById("subdomain-charts-wrapper")
+        let newCanvas = document.createElement("canvas")
+        let newCanvasID = 'subdomainTwo'
+        newCanvas.setAttribute("id",newCanvasID)
+        newCanvas.setAttribute("class","chart subdomain-Two conversions")
+        newCanvas.setAttribute("style","width:100%;max-width:50vw;max-height:50vw")
+        subdomainChartWrapper.appendChild(newCanvas)
+        myCharts[newCanvasID] = null
+        generateDoughnutChart(dataForChart, "Subdomain Two",  "subdomainTwo", "INcludeblankXValues", "Total Conversions")
+        console.log("subdomain2 chart done (3)")
+    }
 
     //campaign stats
-    dataForChart = createAnObjectWithStats(object, "Last Impression Campaign Name")
+function campaignCharts(object){
+    let dataForChart = createAnObjectWithStats(object, "Last Impression Campaign Name")
     generateChart(dataForChart, "Last Impression Campaign Name",  "campaign", "INcludeblankXValues", "Total Conversions", "Unique Converters","Impressions Per Person", "Days From First Impression To Conversion", "Days From Last Impression To Conversion", "Days Between Impressions","Conversions Per Person", "Impressions Per Conversion")
-
+    console.log("campaign chart done (4)")
+}
 
 
     //device Type stats
-    dataForChart = createAnObjectWithStats(object, "Last Impression Device Type")
+function deviceTypeCharts(object){
+    let dataForChart = createAnObjectWithStats(object, "Last Impression Device Type")
     generateChart(dataForChart, "Last Impression Device Type",  "deviceType", "INcludeblankXValues", "Total Conversions", "Unique Converters","Impressions Per Person", "Days From First Impression To Conversion", "Days From Last Impression To Conversion", "Days Between Impressions","Conversions Per Person", "Impressions Per Conversion")
+    console.log("device chart done (5)")
+}
 
+async function generateAllCharts(object){
+    utmCharts(object)
+    subdomainOneChart(object)
+    subdomainTwoChart(object)
+    campaignCharts(object)
+    deviceTypeCharts(object)
 }
 
 //create a table
