@@ -142,8 +142,6 @@ function getTotalImpressions(object, breakdown){
             impressions = impressions + parseInt(e["Touch Count"], 10)
         })
         totalImpressions.push(impressions)
-        console.log(element)
-        console.log(impressions)
     }
         else{
             listValuesOfABreakdown(object, breakdown).forEach(element => {
@@ -386,21 +384,10 @@ function addTouchCountToObject(object){
             e["Touch Count"]= parseInt(e["Impression Count"],10) + parseInt(e["Display Click Count"],10)
             if(e["Last Display Click Time UTC"] > e["Last Impression Time UTC"]){e["Last Touch Time UTC"] = e["Last Display Click Time UTC"]}
             else {e["Last Touch Time UTC"] = e["Last Impression Time UTC"]}
-            // if(e["First Impression Time UTC"] > e["First Display Click Time UTC"]){e["First Touch Time UTC"] = e["First Display Click Time UTC"]}
-            // else {e["First Touch Time UTC"] = e["First Impression Time UTC"]}
-
-            if(e["First Display Click Time UTC"] == 0){e["First Touch Time UTC"] = e["First Impression Time UTC"]
-                e["troubleshooting"]='e["First Display Click Time UTC"] == 0'
-            }
-            else if(e["First Impression Time UTC"] == 0){e["First Touch Time UTC"] = e["First Display Click Time UTC"]
-            e["troubleshooting"]='e["First Impression Time UTC"] == 0'
-            }
-            else if(e["First Display Click Time UTC"] < e["First Impression Time UTC"]){e["First Touch Time UTC"] = e["First Display Click Time UTC"]
-            e["troubleshooting"]='e["First Display Click Time UTC"] < e["First Impression Time UTC"]'
-            }
-            else {e["First Touch Time UTC"] = e["First Impression Time UTC"]
-            e["troubleshooting"]='e["First Touch Time UTC"] = e["First Impression Time UTC'
-            }
+            if(e["First Display Click Time UTC"] == 0){e["First Touch Time UTC"] = e["First Impression Time UTC"]}
+            else if(e["First Impression Time UTC"] == 0){e["First Touch Time UTC"] = e["First Display Click Time UTC"]}
+            else if(e["First Display Click Time UTC"] < e["First Impression Time UTC"]){e["First Touch Time UTC"] = e["First Display Click Time UTC"]}
+            else {e["First Touch Time UTC"] = e["First Impression Time UTC"]}
         })
         resolve(object)
     })
@@ -626,6 +613,7 @@ function createNewElement(tagType, ID, className){
 function summarize(object){
 
     let summaryWrapper = document.getElementById("summary-wrapper")
+    summaryWrapper.innerHTML=""
 
     function addElements(elementName, elementHTMLReference, title){
         let div = createNewElement("div", elementHTMLReference+"-Container", "summary-stat-container")
@@ -648,17 +636,60 @@ function summarize(object){
     //device types
     addElements("Last Impression Device Type", "Last-Impression-Device-Type", "Device Types")
     //dates
+
+    // ---dates TBD
+
+    let summaryObject = createAnObjectWithStats(object)
+
+    // document.getElementById("conversions-value").innerHTML=summaryObject[0]["Total Conversions"]
+    document.getElementById("conversions-value").innerHTML=new Intl.NumberFormat().format(summaryObject[0]["Total Conversions"]);
+    document.getElementById("conversions-value-label").innerHTML='Total Conversions'
+
+    document.getElementById("impressions-value").innerHTML=new Intl.NumberFormat().format(summaryObject[0]["Total Impressions"]);
+    document.getElementById("impressions-value-label").innerHTML='Total Impressions'
+
+    document.getElementById("converters-value").innerHTML=new Intl.NumberFormat().format(summaryObject[0]["Unique Converters"]);
+    document.getElementById("converters-value-label").innerHTML='Total Unique Converters'
+//--
+
+    const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+
+    // document.getElementById("conversions-pp-value").innerHTML=summaryObject[0]["Conversions Per Person"]
+    document.getElementById("conversions-pp-value").innerHTML=formatter.format(summaryObject[0]["Conversions Per Person"])
+    document.getElementById("conversions-pp-value-label").innerHTML='Conversions Per Person'
+
+    document.getElementById("impressions-pc-value").innerHTML=formatter.format(summaryObject[0]["Impressions Per Conversion"])
+    document.getElementById("impressions-pc-value-label").innerHTML='Impressions Per Conversion'
+
+    document.getElementById("impressions-pp-value").innerHTML=formatter.format(summaryObject[0]["Impressions Per Person"])
+    document.getElementById("impressions-pp-value-label").innerHTML='Impressions Per Person'
+//--
+    document.getElementById("days-imp-imp-value").innerHTML=formatter.format(summaryObject[0]["Days Between Impressions"])
+    document.getElementById("days-imp-imp-value-label").innerHTML='Days Between Impressions'
+
+    document.getElementById("days-firstimp-conv-value").innerHTML=formatter.format(summaryObject[0]["Days From First Impression To Conversion"])
+    document.getElementById("days-firstimp-conv-value-label").innerHTML='Days From First Impression To Conversion'
+
+    document.getElementById("days-lastimp-conv-value").innerHTML=formatter.format(summaryObject[0]["Days From Last Impression To Conversion"])
+    document.getElementById("days-lastimp-conv-value-label").innerHTML='Days From Last Impression To Conversion'
+
+
     console.log('summary done')
+
+
 }
 
 
 //UTM charts
 function utmCharts(object){
     let UTMTypeArray = findAllUTMTypes(object)
+    let UTMChartWrapper = document.getElementById("utm-charts-wrapper")
+    UTMChartWrapper.innerHTML=""
     UTMTypeArray.forEach(e => {
         let dataForChart = createAnObjectWithStats(object, e)
-
-        let UTMChartWrapper = document.getElementById("utm-charts-wrapper")
         let newCanvas = document.createElement("canvas")
         let newCanvasID = e+"chartID"
         newCanvas.setAttribute("id",newCanvasID)
@@ -677,11 +708,12 @@ function trackingTagCharts(object){
     let dataForChart = createAnObjectWithStats(object, "Tracking Tag Name")
 
     let TrackingTagChartWrapper = document.getElementById("trackingtag-charts-wrapper")
+    TrackingTagChartWrapper.innerHTML=""
     let newCanvas = document.createElement("canvas")
     let newCanvasID = "trackingtag"
     newCanvas.setAttribute("id",newCanvasID)
     newCanvas.setAttribute("class","chart trackingtag conversions")
-    newCanvas.setAttribute("style","width:100%;max-width:100vw;max-height:100vw")
+    newCanvas.setAttribute("style","width:90vw;max-width:90vw;max-height:90vw")
     TrackingTagChartWrapper.appendChild(newCanvas)
     myCharts[newCanvasID] = null
 
@@ -693,11 +725,12 @@ function trackingTagCharts(object){
 function subdomainOneChart(object){
     let dataForChart = createAnObjectWithStats(object, "Subdomain One")
     let subdomainChartWrapper = document.getElementById("subdomain-charts-wrapper")
+    subdomainChartWrapper.innerHTML=""
     let newCanvas = document.createElement("canvas")
     let newCanvasID = 'subdomainOne'
     newCanvas.setAttribute("id",newCanvasID)
     newCanvas.setAttribute("class","chart subdomain-One conversions")
-    newCanvas.setAttribute("style","width:100%;max-width:50vw;max-height:50vw")
+    newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
     subdomainChartWrapper.appendChild(newCanvas)
     myCharts[newCanvasID] = null
     generateDoughnutChart(dataForChart, "Subdomain One",  "subdomainOne", "INcludeblankXValues", "Total Conversions")
@@ -712,7 +745,7 @@ function subdomainOneChart(object){
         let newCanvasID = 'subdomainTwo'
         newCanvas.setAttribute("id",newCanvasID)
         newCanvas.setAttribute("class","chart subdomain-Two conversions")
-        newCanvas.setAttribute("style","width:100%;max-width:50vw;max-height:50vw")
+        newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
         subdomainChartWrapper.appendChild(newCanvas)
         myCharts[newCanvasID] = null
         generateDoughnutChart(dataForChart, "Subdomain Two",  "subdomainTwo", "INcludeblankXValues", "Total Conversions")

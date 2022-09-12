@@ -3,9 +3,10 @@
 /* https://coolors.co/eec4bb-d83d51-d53300-df7628-8ceb99-629e48-30482e-e4a807-fff373 */
 
 body{
-  margin: 0vw 3vw 1vw 3vw;
+  padding: 0vw 3vw 1vw 3vw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   font-family: 'Work Sans', sans-serif;
 }
 
@@ -16,7 +17,7 @@ body{
     margin: 25px 0;
     font-size: 0.9em;
     font-family: 'Work Sans', sans-serif;
-    min-width: 200px;
+    /* min-width: 200px; */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     /* overflow: hidden; */
@@ -142,7 +143,7 @@ body{
     border: 1px solid #ddd;
     z-index: 1;
     overflow-y: scroll;
-    max-height: 100vh;
+    max-height: 50vh;
   }
   
   /* Links inside the dropdown */
@@ -175,12 +176,19 @@ body{
   /* Chart Style */
 
 .chart-section{
-  margin: 5vw;
+  width: 100%;
+  margin-top: 5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .chart-subsection{
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 
@@ -191,13 +199,69 @@ body{
 
 /* -----Summary Items Stylings------ */
 #summary-wrapper{
-  display:flex;
-  flex-direction:row;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+  border: 1px solid green;
 }
 
 .summary-stat-container{
-  /* border: 1px solid pink; */
   margin: 1vw;
-  padding: 1vw;
+  /* padding: 1vw; */
   border-radius: 1vw;
+
+}
+
+.summary-stats-title{
+  border-bottom: 1px solid lightgreen;
+  text-align: center;
+}
+
+.summary-stat-container{
+  width: 20vw;
+}
+
+.summary-stats{
+  text-align: center;
+}
+
+#summary-stats-wrapper{
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-row{
+  display: flex;
+  flex-direction: row;
+  width: 80vw;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-data-point-container{
+  text-align: center;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1vw;
+  /* padding: 1vw; */
+  width: 20vw;
+}
+
+.chart{
+  max-width: 100vw;
+}
+
+.summary-data-point-label{
+  margin:0;
+}
+
+.summary-data-point-value{
+  margin-bottom: .5em;
+  font-size: 32px;
 }
