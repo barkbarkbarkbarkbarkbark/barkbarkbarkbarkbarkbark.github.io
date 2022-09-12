@@ -414,13 +414,25 @@ function destroyAllCharts(){
 }
 
 const CHART_COLORS =   {
-    red: 'rgb(255, 99, 132)',
-    orange: 'rgb(255, 159, 64)',
-    yellow: 'rgb(255, 205, 86)',
-    green: 'rgb(75, 192, 192)',
-    blue: 'rgb(54, 162, 235)',
-    purple: 'rgb(153, 102, 255)',
-    grey: 'rgb(201, 203, 207)'
+    one: 'rgb(255, 99, 132)',
+    two: 'rgb(255, 159, 64)',
+    three: 'rgb(255, 205, 86)',
+    four: 'rgb(75, 192, 192)',
+    five: 'rgb(54, 162, 235)',
+    six: 'rgb(153, 102, 255)',
+    seven: 'rgb(201, 203, 207)'
+}
+
+const Opacity = 1
+
+const CHART_COLORS_TRANSPARENT =   {
+    one: 'rgb(255, 99, 132,'+Opacity+')',
+    two: 'rgb(255, 159, 64,'+Opacity+')',
+    three: 'rgb(255, 205, 86,'+Opacity+')',
+    four: 'rgb(75, 192, 192,'+Opacity+')',
+    five: 'rgb(54, 162, 235,'+Opacity+')',
+    six: 'rgb(153, 102, 255,'+Opacity+')',
+    seven: 'rgb(201, 203, 207,'+Opacity+')'
 }
 
 //#EEC4BB Baby Pink - rgba(238,196,187)
@@ -470,7 +482,7 @@ function generateDoughnutChart(dataForChart, breakdown, canvasID, excludeblankXV
             responsive: true,
             plugins: {
               legend: {
-                position: 'top',
+                position: 'left',
               },
             //   title: {
             //     display: true,
@@ -556,17 +568,17 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
         data: {
             labels: xValues,
             datasets: 
-                [{label: yValue1, yAxisID: 'y', backgroundColor: ['rgba(238, 196, 187, .2)'], borderColor: ['rgba(238, 196, 187)'],
+            [{label: yValue1, yAxisID: 'y', backgroundColor: [CHART_COLORS_TRANSPARENT.one], borderColor: [CHART_COLORS.one],
                     borderWidth: 1, data: yValuesOne},
-                {label: yValue2, yAxisID: 'y', backgroundColor: ['rgba(216,61,81, .2)'], borderColor: ['rgba(216,61,81)'], 
+                {label: yValue2, yAxisID: 'y', backgroundColor: [CHART_COLORS_TRANSPARENT.two], borderColor: [CHART_COLORS.two], 
                     borderWidth: 1, data: yValuesTwo},
-                {label: yValue3, yAxisID: 'y', backgroundColor: ['rgba(213,51,0,.2)'], borderColor: ['rgba(213,51,0)'], 
+                {label: yValue3, yAxisID: 'y', backgroundColor: [CHART_COLORS_TRANSPARENT.three], borderColor: [CHART_COLORS.three], 
                     borderWidth: 1, data: yValuesThree},
-                {label: yValue4, yAxisID: 'y1', backgroundColor: ['rgba(223,118,40,.2)'], borderColor: ['rgba(223,118,40)'], 
+                {label: yValue4, yAxisID: 'y1', backgroundColor: [CHART_COLORS_TRANSPARENT.four], borderColor: [CHART_COLORS.four], 
                     borderWidth: 1, data: yValuesFour},
-                {label: yValue5, yAxisID: 'y1', backgroundColor: ['rgba(228,168,7,.2)'], borderColor: ['rgba(228,168,7)'], 
+                {label: yValue5, yAxisID: 'y1', backgroundColor: [CHART_COLORS_TRANSPARENT.five], borderColor: [CHART_COLORS.five], 
                     borderWidth: 1, data: yValuesFive},
-                {label: yValue6, yAxisID: 'y1', backgroundColor: ['rgba(237,197,90,.2)'], borderColor: ['rgba(237,197,90)'], 
+                {label: yValue6, yAxisID: 'y1', backgroundColor: [CHART_COLORS_TRANSPARENT.six], borderColor: [CHART_COLORS.six], 
                     borderWidth: 1, data: yValuesSix},
             ],
             },
@@ -580,7 +592,7 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
             data: {
                 labels: xValues,
                 datasets: 
-                [{label: yValue1, yAxisID: 'y', backgroundColor: ['rgba(228,168,7, 0.2)'], borderColor: ['rgba(228,168,7)'],
+                [{label: yValue1, yAxisID: 'y', backgroundColor: [CHART_COLORS_TRANSPARENT.one], borderColor: [CHART_COLORS.one],
                 borderWidth: 1, data: yValuesOne},]
             },
             options: optionsOneScale
@@ -601,8 +613,46 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
     // }
 }
 
+function createNewElement(tagType, ID, className){
+    let newTag = document.createElement(tagType)
+    newTag.setAttribute("id", ID)
+    newTag.setAttribute("class",className)
+    console.log(newTag)
+    return newTag
+}
+
+//Summary
+function summarize(object){
+
+    let summaryWrapper = document.getElementById("summary-wrapper")
+
+    function addElements(elementName, elementHTMLReference, title){
+        let div = createNewElement("div", elementHTMLReference+"-Container", "summary-stat-container")
+        summaryWrapper.appendChild(div)
+        let titleHeader = createNewElement("h3", "title"+title, "summary-stats-title")
+        div.appendChild(titleHeader)
+        titleHeader.innerHTML = title
+        let grainsNames = listValuesOfABreakdown(object, elementName)
+        grainsNames.forEach(e => {
+            console.log(e)
+            let newTag = createNewElement("p", elementHTMLReference+e, "summary-stats")
+            div.appendChild(newTag)
+            newTag.innerHTML = e
+        })
+    }
+
+    //tracking tags
+    addElements("Tracking Tag Name", "Tracking-Tag-Name", "Tracking Tags")
+    //campaigns
+    addElements("Last Impression Campaign Name", "Last-Impression-Campaign-Name", "Campaigns")
+    //device types
+    addElements("Last Impression Device Type", "Last-Impression-Device-Type", "Device Types")
+    //dates
+    console.log('summary done')
+}
 
 
+//UTM charts
 function utmCharts(object){
     let UTMTypeArray = findAllUTMTypes(object)
     UTMTypeArray.forEach(e => {
@@ -620,6 +670,23 @@ function utmCharts(object){
         generateChart(dataForChart, e, newCanvasID, "excludeblankXValues", "Total Conversions")
         console.log("utm charts done (1)")
     })
+}
+
+//Tracking Tags
+function trackingTagCharts(object){
+    let dataForChart = createAnObjectWithStats(object, "Tracking Tag Name")
+
+    let TrackingTagChartWrapper = document.getElementById("trackingtag-charts-wrapper")
+    let newCanvas = document.createElement("canvas")
+    let newCanvasID = "trackingtag"
+    newCanvas.setAttribute("id",newCanvasID)
+    newCanvas.setAttribute("class","chart trackingtag conversions")
+    newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
+    TrackingTagChartWrapper.appendChild(newCanvas)
+    myCharts[newCanvasID] = null
+
+    generateChart(dataForChart, "Tracking Tag Name",  "trackingtag", "INcludeblankXValues", "Total Conversions", "Unique Converters","Impressions Per Person", "Days From First Impression To Conversion", "Days From Last Impression To Conversion", "Days Between Impressions","Conversions Per Person", "Impressions Per Conversion")
+    console.log("Tracking tag chart done ()")
 }
     
     //conversions by subdomain
@@ -668,6 +735,8 @@ function deviceTypeCharts(object){
 }
 
 async function generateAllCharts(object){
+    summarize(object)
+    trackingTagCharts(object)
     utmCharts(object)
     subdomainOneChart(object)
     subdomainTwoChart(object)
