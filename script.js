@@ -136,18 +136,20 @@ function getTotalImpressions(object, breakdown){
     let totalImpressions = []
     let impressions = 0
     if (breakdown == null){
+        console.log("breakdown == null")
+        impressions = 0
         object.forEach(e => {
-            //impressions = impressions + parseInt(e["Impression Count"], 10)
             impressions = impressions + parseInt(e["Touch Count"], 10)
         })
         totalImpressions.push(impressions)
-        }
+        console.log(element)
+        console.log(impressions)
+    }
         else{
             listValuesOfABreakdown(object, breakdown).forEach(element => {
                 impressions = 0
                 let result = object.filter(e => e[breakdown] == element)
                 result.forEach(e => {
-                    //impressions = impressions + parseInt(e["Impression Count"], 10)
                     impressions = impressions + parseInt(e["Touch Count"], 10)
                 })
                 totalImpressions.push(impressions)
@@ -381,7 +383,7 @@ function addSubdirectoriesToObject(object){
 function addTouchCountToObject(object){
     return new Promise((resolve, reject) => {
         object.forEach(e => { 
-            e["Touch Count"]= e["Impression Count"] + e["Display Click Count"]
+            e["Touch Count"]= parseInt(e["Impression Count"],10) + parseInt(e["Display Click Count"],10)
             if(e["Last Display Click Time UTC"] > e["Last Impression Time UTC"]){e["Last Touch Time UTC"] = e["Last Display Click Time UTC"]}
             else {e["Last Touch Time UTC"] = e["Last Impression Time UTC"]}
             // if(e["First Impression Time UTC"] > e["First Display Click Time UTC"]){e["First Touch Time UTC"] = e["First Display Click Time UTC"]}
@@ -572,7 +574,7 @@ function generateChart(dataForChart, breakdown, canvasID, excludeblankXValues, y
                     borderWidth: 1, data: yValuesOne},
                 {label: yValue2, yAxisID: 'y', backgroundColor: [CHART_COLORS_TRANSPARENT.two], borderColor: [CHART_COLORS.two], 
                     borderWidth: 1, data: yValuesTwo},
-                {label: yValue3, yAxisID: 'y', backgroundColor: [CHART_COLORS_TRANSPARENT.three], borderColor: [CHART_COLORS.three], 
+                {label: yValue3, yAxisID: 'y1', backgroundColor: [CHART_COLORS_TRANSPARENT.three], borderColor: [CHART_COLORS.three], 
                     borderWidth: 1, data: yValuesThree},
                 {label: yValue4, yAxisID: 'y1', backgroundColor: [CHART_COLORS_TRANSPARENT.four], borderColor: [CHART_COLORS.four], 
                     borderWidth: 1, data: yValuesFour},
@@ -617,7 +619,6 @@ function createNewElement(tagType, ID, className){
     let newTag = document.createElement(tagType)
     newTag.setAttribute("id", ID)
     newTag.setAttribute("class",className)
-    console.log(newTag)
     return newTag
 }
 
@@ -634,7 +635,6 @@ function summarize(object){
         titleHeader.innerHTML = title
         let grainsNames = listValuesOfABreakdown(object, elementName)
         grainsNames.forEach(e => {
-            console.log(e)
             let newTag = createNewElement("p", elementHTMLReference+e, "summary-stats")
             div.appendChild(newTag)
             newTag.innerHTML = e
@@ -681,7 +681,7 @@ function trackingTagCharts(object){
     let newCanvasID = "trackingtag"
     newCanvas.setAttribute("id",newCanvasID)
     newCanvas.setAttribute("class","chart trackingtag conversions")
-    newCanvas.setAttribute("style","width:100%;max-width:30vw;max-height:30vw")
+    newCanvas.setAttribute("style","width:100%;max-width:100vw;max-height:100vw")
     TrackingTagChartWrapper.appendChild(newCanvas)
     myCharts[newCanvasID] = null
 
@@ -734,7 +734,7 @@ function deviceTypeCharts(object){
     console.log("device chart done (5)")
 }
 
-async function generateAllCharts(object){
+function generateAllCharts(object){
     summarize(object)
     trackingTagCharts(object)
     utmCharts(object)

@@ -188,3 +188,16 @@ body{
 .chart{
   padding: 2vw;
 }
+
+/* -----Summary Items Stylings------ */
+#summary-wrapper{
+  display:flex;
+  flex-direction:row;
+}
+
+.summary-stat-container{
+  /* border: 1px solid pink; */
+  margin: 1vw;
+  padding: 1vw;
+  border-radius: 1vw;
+}
